@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイクラの地図にドット絵描くプログラムを書くやつ</title>
+</head>
+<body>
+<h1>マイクラの地図にドット絵描くプログラムを書くやつ</h1>
+<p>教育版のMakeCode用です。</p>
+<p>コードビルダーでMakeCodeを選んでプロジェクトを新規作成
+  <br>jsを選んで全部削除→ココで作成したコードを貼り付けてね</p>
+<p>画像はサイズ128×128がおすすめです。</p>
+<p>
+  再生ボタンを押したら、コマンド「run」で
+  <br>run num1 num2 num3 のように使います。座標(num1, num2, num3)から128×128の範囲がドット絵になります。
+  <br>透過部分は何もかかれないので先にキャンバスになる床を準備しておくことをおすすめします。
+  <br>地図にしたい場合は初期位置の座標(num1, num2, num3)を調整してね。
+  <br>x,z座標は128の倍数-64の値がいいよ。y座標はスーパーフラットなら-60がいいよ。
+  <br>例：run -64 -60 -192
+  <br>コマンド叩いた直後は動かないほうがいいかな。
+</p> 
+
+
+<h2>★注意事項★</h2>
+<p>まずはテスト用にワールドを作成して、十分試してから使って下さい。</p>
+<p>実行後、ドット絵を描き終わるまでPCのスペックによるかもですがwin10版で30分～40分程度かかりました。</p>
+<p>このアプリで作成したコードを使用してどんな結果になっても、自己責任となります。</p>
+<p>公式とは一切関係ありません。</p>
+
+<div><p>▼▼▼ではこちらから地図でお絵描きの世界へ～▼▼▼</p></div>
+<div class="upload"><input type="file" name="file" id="file"></div>
+<canvas id="canvas"></canvas>
+<div>
+  <button id="btnCode">ドット絵を描くコードを表示する</button>
+</div>
+<div>
+  <p>↓を全選択＆コピーして使ってね</p>
+  <textarea id="txta" rows="10" cols="80"></textarea>
+</div>
+<script src="color-classifier.min.js"></script>
+<script src="dotcolor.js"></script>
+</body>
+</html>
