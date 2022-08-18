@@ -116,8 +116,10 @@ btnCode.addEventListener('click',()=>{
     }
     tmp_dcolorsZ.push(v);
   });         
-      
-  let code="//" + $('#file')[0].files[0].name + "\n";
+  
+  const filedata = document.getElementById('file');
+
+  let code="//" + filedata.files[0].name + "\n";
   code +="let list: number[] = []\n";
   code +="let position: Position = null\n";
   code +="let i = 0\n";
