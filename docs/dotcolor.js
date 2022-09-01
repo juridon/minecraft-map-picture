@@ -106,7 +106,7 @@ btnCode.addEventListener('click', ()=>{
   player.onChat("run", function (num1, num2, num3) {
     list = []
     player.teleport(world(num1, num2, num3))
-    position = positions.add(player.position(),pos(0, -1, 0))`;
+    position = positions.add(player.position(),pos(0, -1, 0))\n`;
   // ブロックを1個ずつ置く命令を書いていく～
   draw_dots.forEach((v, iZ)=>{
     v.forEach((w, iX)=>{
