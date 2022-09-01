@@ -100,24 +100,24 @@ btnCode.addEventListener('click', ()=>{
 
   // マイクラのMakeCode用プログラムにしているところ。
   let code = `// ${filedata.files[0].name}
-  let list: number[] = []
-  let position: Position = null
-  let i = 0
-  player.onChat("run", function (num1, num2, num3) {
-    list = []
-    player.teleport(world(num1, num2, num3))
-    position = positions.add(player.position(),pos(0, -1, 0))`;
+  let list: number[] = []\n
+  let position: Position = null\n
+  let i = 0\n
+  player.onChat("run", function (num1, num2, num3) {\n
+    list = []\n
+    player.teleport(world(num1, num2, num3))\n
+    position = positions.add(player.position(),pos(0, -1, 0))\n`;
   // ブロックを1個ずつ置く命令を書いていく～
   draw_dots.forEach((v, iZ)=>{
     v.forEach((w, iX)=>{
       if (w !== 'A') {
-        code += `  blocks.place(${w}, positions.add(position, pos(${iX}, 0, ${iZ})))`;
+        code += `  blocks.place(${w}, positions.add(position, pos(${iX}, 0, ${iZ})))\n`;
       }
     });
   });
 
-  code += `  player.tell(mobs.target(LOCAL_PLAYER), "画像ができたよ")
-   '})`;
+  code += `  player.tell(mobs.target(LOCAL_PLAYER), "画像ができたよ")\n
+   '})\n`;
 
   const txtArea = document.getElementById('txta');
   txtArea.value = code;
