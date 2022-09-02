@@ -100,13 +100,11 @@ btnCode.addEventListener('click', ()=>{
 
   // マイクラのMakeCode用プログラムにしているところ。
   let code = `// ${filedata.files[0].name}
-  let list: number[] = []
-  let position: Position = null
-  let i = 0
-  player.onChat("run", function (num1, num2, num3) {
-    list = []
-    player.teleport(world(num1, num2, num3))
-    position = positions.add(player.position(),pos(0, -1, 0))\n`;
+player.onChat("run", (num1, num2, num3) => {
+  player.teleport(world(num1, num2, num3))
+  const position = positions.add(player.position(),pos(0, -1, 0))
+  player.teleport(world(num1 + 64, num2, num3 + 64))
+  player.tell(mobs.target(LOCAL_PLAYER), "絵が完成するまで動いちゃダメ")\n`;
   // ブロックを1個ずつ置く命令を書いていく～
   draw_dots.forEach((v, iZ)=>{
     v.forEach((w, iX)=>{
@@ -116,8 +114,7 @@ btnCode.addEventListener('click', ()=>{
     });
   });
 
-  code += `  player.tell(mobs.target(LOCAL_PLAYER), "画像ができたよ")
-   })\n`;
+  code += `  player.tell(mobs.target(LOCAL_PLAYER), "画像ができたよ")\n})\n`;
 
   const txtArea = document.getElementById('txta');
   txtArea.value = code;
@@ -133,29 +130,32 @@ canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 const ctx = canvas.getContext('2d');
 
+const canvasDraw = () => {
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  const img = new Image();
+  img.src = uploadImgSrc;
+  img.onload = () => {
+    ctx.drawImage(img, 0, 0, canvasWidth, this.height * (canvasWidth / this.width));
+  };
+};
+
 const loadLocalImage = (e) => {
   const fileData = e.target.files[0];
   if (!fileData.type.match('image.*')) {
-    alert('画像ファイルにしてね');
+    alert('画像ファイルをアップしてね');
     return;
   }
 
   const reader = new FileReader();
-  reader.onload = function() {
+  reader.onload = () => {
     uploadImgSrc = reader.result;
     canvasDraw();
   };
   reader.readAsDataURL(fileData);
 };
 
+// ファイルを開いたら画像を読み読みする
 file.addEventListener('change', loadLocalImage, false);
 
-const canvasDraw = () => {
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  const img = new Image();
-  img.src = uploadImgSrc;
-  img.onload = function() {
-    ctx.drawImage(img, 0, 0, canvasWidth, this.height * (canvasWidth / this.width));
-  };
-};
+
 
