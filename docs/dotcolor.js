@@ -100,7 +100,7 @@ btnCode.addEventListener('click', ()=>{
 
   // マイクラのMakeCode用プログラムにしているところ。
   let code = `// ${filedata.files[0].name}
-player.onChat("run", (num1, num2, num3) => {
+player.onChat("run", function (num1, num2, num3) {
   player.teleport(world(num1, num2, num3))
   const position = positions.add(player.position(),pos(0, -1, 0))
   player.teleport(world(num1 + 64, num2, num3 + 64))
@@ -134,10 +134,11 @@ const canvasDraw = () => {
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   const img = new Image();
   img.src = uploadImgSrc;
-  img.onload = () => {
+  img.onload = function() {
     ctx.drawImage(img, 0, 0, canvasWidth, this.height * (canvasWidth / this.width));
   };
 };
+
 
 const loadLocalImage = (e) => {
   const fileData = e.target.files[0];
@@ -156,6 +157,5 @@ const loadLocalImage = (e) => {
 
 // ファイルを開いたら画像を読み読みする
 file.addEventListener('change', loadLocalImage, false);
-
 
 
