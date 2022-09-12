@@ -74,9 +74,20 @@ const colorClassifierM = new ColorClassifier(paletteM);
 // RGBの値を16進数のカラーコード#ffffffみたいなやつに変換する関数を定義している行
 const rgb2hex = (rgb) => '#' + rgb.map((value) => ('0' + value.toString(16)).slice(-2)).join('');
 
-// ボタンを作っている行
-const btnCode = document.getElementById('btnCode');
+let picFile;
 
+const btnArea = document.getElementById("btnArea");
+
+const txta = document.getElementById("txta");
+const txtArea = new Kuc.TextArea();
+txta.appendChild(txtArea);
+
+
+// ボタンを作っている行
+const btnCode = new Kuc.Button({
+  text: '地図にドット絵を描くコードを表示する',
+  type: 'submit'
+});
 // ボタンに力を持たせている行（クリックしたら動く関数を定義している）
 btnCode.addEventListener('click', ()=>{
   const draw_dots = [];
@@ -121,10 +132,8 @@ btnCode.addEventListener('click', ()=>{
     tmp_dcolorsZ.push(v);
   });
 
-  const filedata = document.getElementById('file');
-
   // マイクラのMakeCode用プログラムにしているところ。
-  let code = `// ${filedata.files[0].name}
+  let code = `// ${picFile.name}
 player.onChat("run", function (num1, num2, num3) {
   player.teleport(world(num1, num2, num3))
   const position = positions.add(player.position(),pos(0, -1, 0))
@@ -141,13 +150,17 @@ player.onChat("run", function (num1, num2, num3) {
 
   code += `  player.tell(mobs.target(LOCAL_PLAYER), "画像ができたよ")\n})\n`;
 
-  const txtArea = document.getElementById('txta');
+  //const txtArea = document.getElementById('txta');
   txtArea.value = code;
 });
+btnArea.appendChild(btnCode);
 
 
 // 壁画用ボタンを作っている行
-const btnMuralCode = document.getElementById('btnMuralCode');
+const btnMuralCode = new Kuc.Button({
+  text: '壁画を描くコードを表示する',
+  type: 'submit'
+});
 // 壁画用ボタンに力を持たせている行（クリックしたら動く関数を定義している）
 btnMuralCode.addEventListener('click', ()=>{
   const draw_dots = [];
@@ -192,10 +205,9 @@ btnMuralCode.addEventListener('click', ()=>{
     tmp_dcolorsZ.push(v);
   });
 
-  const filedata = document.getElementById('file');
 
   // マイクラのMakeCode用プログラムにしているところ。
-  let code = `// ${filedata.files[0].name}
+  let code = `// ${picFile.name}
 player.onChat("run", function (num1, num2, num3) {
   player.teleport(world(num1, num2, num3))
   const position = positions.add(player.position(),pos(0, -1, 0))
@@ -212,9 +224,10 @@ player.onChat("run", function (num1, num2, num3) {
 
   code += `  player.tell(mobs.target(LOCAL_PLAYER), "画像ができたよ")\n})\n`;
 
-  const txtArea = document.getElementById('txta');
+  //const txtArea = document.getElementById('txta');
   txtArea.value = code;
 });
+btnArea.appendChild(btnMuralCode);
 
 
 
@@ -251,9 +264,49 @@ const loadLocalImage = (e) => {
     canvasDraw();
   };
   reader.readAsDataURL(fileData);
+  const filedata = document.getElementById('file');
+  console.log(filedata.files);
+//console.log(fileData);
+picFile= fileData;
+
 };
 
 // ファイルを開いたら画像を読み読みする
 file.addEventListener('change', loadLocalImage, false);
 
 
+dropbox = document.getElementById("filebox");
+dropbox.addEventListener("dragenter", dragenter, false);
+dropbox.addEventListener("dragover", dragover, false);
+dropbox.addEventListener("drop", drop, false);
+
+function drop(e) {
+  e.stopPropagation();
+  e.preventDefault();
+
+  const dt = e.dataTransfer;
+  const fileData = dt.files[0];
+//console.log(fileData);
+  //handleFiles(files);
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    uploadImgSrc = reader.result;
+    canvasDraw();
+  };
+  reader.readAsDataURL(fileData);
+  const filedata = document.getElementById('file');
+  filedata.files = dt.files;
+  console.log(filedata.files);
+picFile= fileData;
+}
+
+function dragenter(e) {
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+function dragover(e) {
+  e.stopPropagation();
+  e.preventDefault();
+}

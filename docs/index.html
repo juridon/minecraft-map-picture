@@ -29,17 +29,20 @@
 <p>公式とは一切関係ありません。</p>
 
 <div><p>▼▼▼ではこちらから地図でお絵描きの世界へ～▼▼▼</p></div>
-<div class="upload"><input type="file" name="file" id="file"></div>
-<canvas id="canvas"></canvas>
-<div>
-  <button id="btnCode">地図にドット絵を描くコードを表示する</button>
-  <button id="btnMuralCode">壁画を描くコードを表示する</button>
+<div id="filebox" class="upload" style="padding:auto;border: solid;width:300px;">
+  <p style="text-align: center;font-weight: bold;">画像ファイルをドラッグドロップ！</p>
+  <input type="file" name="file" id="file" style="margin:10px 30px;display: block;">
+  <canvas id="canvas" style="margin:auto;display: block;"></canvas>
 </div>
+<div id="btnArea"></div>
 <div>
   <p>↓を全選択＆コピーして使ってね</p>
-  <textarea id="txta" rows="10" cols="80"></textarea>
+  <div id="txta"></div>
+  
 </div>
 <script src="color-classifier.min.js"></script>
+<script src="https://unpkg.com/kintone-ui-component/umd/kuc.min.js"></script>
 <script src="dotcolor.js"></script>
+
 </body>
 </html>
