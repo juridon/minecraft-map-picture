@@ -46,6 +46,31 @@ const palette = Object.keys(COLOR_BLOCKS);
 // 色を判別するライブラリをありがたく使わせていただきますの行
 const colorClassifier = new ColorClassifier(palette);
 
+const COLOR_BLOCKSM = {
+  '#FFFFFF': 'WHITE_CONCRETE',
+  '#EE7800': 'ORANGE_CONCRETE',
+  '#E4007F': 'MAGENTA_CONCRETE',
+  '#B2CBE4': 'LIGHT_BLUE_CONCRETE',
+  '#FFFF00': 'YELLOW_CONCRETE',
+  '#00FF00': 'LIME_CONCRETE',
+  '#ff69b4': 'PINK_CONCRETE',
+  '#808080': 'GRAY_CONCRETE',
+  '#d3d3d3': 'LIGHT_GRAY_CONCRETE',
+  '#00ffff': 'CYAN_CONCRETE',
+  '#800080': 'PURPLE_CONCRETE',
+  '#0000ff': 'BLUE_CONCRETE',
+  '#a52a2a': 'BROWN_CONCRETE',
+  '#008000': 'GREEN_CONCRETE',
+  '#ff0000': 'RED_CONCRETE',
+  '#000000': 'BLACK_CONCRETE'};
+
+// 壁画用キーの配列
+const paletteM = Object.keys(COLOR_BLOCKSM);
+
+// 壁画用色を判別するライブラリをありがたく使わせていただきますの行
+const colorClassifierM = new ColorClassifier(paletteM);
+
+
 // RGBの値を16進数のカラーコード#ffffffみたいなやつに変換する関数を定義している行
 const rgb2hex = (rgb) => '#' + rgb.map((value) => ('0' + value.toString(16)).slice(-2)).join('');
 
@@ -119,6 +144,79 @@ player.onChat("run", function (num1, num2, num3) {
   const txtArea = document.getElementById('txta');
   txtArea.value = code;
 });
+
+
+// 壁画用ボタンを作っている行
+const btnMuralCode = document.getElementById('btnMuralCode');
+// 壁画用ボタンに力を持たせている行（クリックしたら動く関数を定義している）
+btnMuralCode.addEventListener('click', ()=>{
+  const draw_dots = [];
+  // canvas上の画像データ（128x128）をゲット！
+  const data = ctx.getImageData(0, 0, 128, 128).data;
+  const dots = [];
+  let one_dot = [];
+  data.forEach((v, idx)=>{
+    one_dot.push(v);
+    // dataには[R,G,B,Alpha, R,G,B,Alpha, ....]の順に値が入っているので、4つずつにバラす。
+    // もっといい方法があるとおもう
+    if (idx % 4 === 3) {
+      dots.push(one_dot);
+      one_dot = [];
+    }
+  });
+
+  // 色をゲットしてその色のブロック名をゲット！
+  const dots_color = [];
+  dots.forEach((v)=>{
+    // 透明じゃなかったら色を指定する
+    if (v[3] > 0) {
+      // RGB値→カラーコードにして、カラーコードから色をゲット！
+      const color = colorClassifierM.classify(rgb2hex([v[0], v[1], v[2]]), 'hex');
+      // 描くべきブロックをdots_colorの配列にプッシュ！
+      dots_color.push(COLOR_BLOCKSM[color]);
+    } else {
+      // 透明だったらとりあえず'A'ってことにしてるとりあえず。後で使う。
+      dots_color.push('A');
+    }
+  });
+
+
+  // dots_colorは要素数65536→4で割って16384これを128x128の2次元配列に分割になるようにしてるの
+  let tmp_dcolorsZ = [];
+  dots_color.forEach((v, idx)=>{
+    if (idx % 128 === 0) {
+      tmp_dcolorsZ = [];
+    } else if (idx % 128 === 127) {
+      draw_dots.push(tmp_dcolorsZ);
+    }
+    tmp_dcolorsZ.push(v);
+  });
+
+  const filedata = document.getElementById('file');
+
+  // マイクラのMakeCode用プログラムにしているところ。
+  let code = `// ${filedata.files[0].name}
+player.onChat("run", function (num1, num2, num3) {
+  player.teleport(world(num1, num2, num3))
+  const position = positions.add(player.position(),pos(0, -1, 0))
+  player.teleport(world(num1 + 64, num2 + 64, num3 + 10))
+  player.tell(mobs.target(LOCAL_PLAYER), "絵が完成するまで動いちゃダメ")\n`;
+  // ブロックを1個ずつ置く命令を書いていく～
+  draw_dots.forEach((v, iZ)=>{
+    v.forEach((w, iX)=>{
+      if (w !== 'A') {
+        code += `  blocks.place(${w}, positions.add(position, pos(${iX}, 128 - ${iZ}, 0)))\n`;
+      }
+    });
+  });
+
+  code += `  player.tell(mobs.target(LOCAL_PLAYER), "画像ができたよ")\n})\n`;
+
+  const txtArea = document.getElementById('txta');
+  txtArea.value = code;
+});
+
+
 
 const file = document.getElementById('file');
 const canvas = document.getElementById('canvas');
